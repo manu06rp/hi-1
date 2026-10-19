@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Something Special For You 💜</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #1a0f16;
+            --bg-gradient: radial-gradient(circle at 50% 20%, #3d1b32 0%, #1f0c1a 60%, #120710 100%);
+            --burgundy: #4a1525;
+            --burgundy-glow: #6e2137;
+            --lavender: #d4b5f0;
+            --lavender-light: #f3ebfc;
+            --lavender-dark: #8b64a8;
+            --glass-bg: rgba(74, 21, 37, 0.25);
+            --glass-border: rgba(212, 181, 240, 0.2);
+            --text-main: #fcf8fd;
+            --text-muted: #d4c5d9;
+            --gold: #e6c594;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-deep);
+            background-image: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Welcome Overlay Screen */
+        #welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 15, 22, 0.92);
+            background-image: radial-gradient(circle at 50% 30%, #4a1525 0%, #1a0f16 70%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        #welcome-overlay.fade-out {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .welcome-card {
+            background: rgba(74, 21, 37, 0.35);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 45px 35px;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 1.2s ease-out;
+        }
+
+        .welcome-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            color: var(--text-main);
+            margin-bottom: 15px;
+        }
+
+        .welcome-card h2 span {
+            color: var(--lavender);
+            font-style: italic;
+        }
+
+        .welcome-card p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        /* Floating Petals Container */
+        #petals-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .petal {
+            position: absolute;
+            background: linear-gradient(135deg, var(--lavender), #b185db);
+            border-radius: 150% 0 150% 0;
+            opacity: 0.35;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-10vh) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 18px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--lavender);
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        h1 span {
+            color: var(--lavender);
+            font-style: italic;
+        }
+
+        p.subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        /* Glass Card Base */
+        .glass-card {
+            background: rgba(45, 18, 33, 0.4);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 35px;
+            margin-bottom: 35px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Countdown Section */
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .time-box {
+            background: rgba(30, 10, 22, 0.6);
+            border: 1px solid rgba(212, 181, 240, 0.15);
+            border-radius: 16px;
+            padding: 20px 10px;
+        }
+
+        .time-box span {
+            display: block;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--lavender);
+            margin-bottom: 5px;
+        }
+
+        .time-box label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+        }
+
+        /* Module 1: The Jar of Notes */
+        .jar-section {
+            text-align: center;
+        }
+
+        .jar-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--lavender-light);
+        }
+
+        .note-display {
+            background: rgba(20, 7, 15, 0.5);
+            border: 1px dashed var(--lavender-dark);
+            border-radius: 16px;
+            padding: 25px;
+            min-height: 110px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-style: italic;
+            color: var(--gold);
+            transition: all 0.5s ease;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--burgundy-glow), #521528);
+            color: var(--lavender-light);
+            border: 1px solid var(--lavender-dark);
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #7c2642, var(--burgundy-glow));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(110, 33, 55, 0.4);
+        }
+
+        /* Module 2: Chapter Map / Timeline */
+        .timeline-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: var(--lavender-light);
+            text-align: center;
+        }
+
+        .chapters {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chapter-card {
+            background: rgba(30, 10, 22, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chapter-card:hover {
+            background: rgba(50, 18, 37, 0.6);
+            border-color: var(--lavender);
+        }
+
+        .chapter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chapter-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: var(--lavender);
+        }
+
+        .chapter-tag {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            background: rgba(139, 100, 168, 0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .chapter-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .chapter-card.active .chapter-body {
+            max-height: 150px;
+            padding-top: 15px;
+        }
+
+        /* Module 3: Unlockable Midnight Vault */
+        .vault-section {
+            text-align: center;
+            background: linear-gradient(135deg, rgba(74, 21, 37, 0.4), rgba(30, 10, 22, 0.6));
+            border: 1px solid var(--gold);
+        }
+
+        .vault-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .vault-content {
+            margin-top: 20px;
+            display: none;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .vault-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        /* Module 4: Grand Surprise Teaser */
+        .teaser-section {
+            text-align: center;
+            background: linear-gradient(135deg, rgba(50, 18, 37, 0.5), rgba(20, 7, 15, 0.8));
+            border: 1px solid var(--lavender-dark);
+        }
+
+        .teaser-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--lavender-light);
+            margin-bottom: 10px;
+        }
+
+        .teaser-reveal {
+            margin-top: 20px;
+            display: none;
+            animation: fadeIn 1s ease-out;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: var(--lavender);
+            font-size: 1.15rem;
+            line-height: 1.7;
+        }
+
+        /* Audio Toggle */
+        .audio-float {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            color: var(--lavender);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .audio-float:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            .countdown-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Welcome Gate Overlay -->
+    <div id="welcome-overlay" onclick="enterWorld()">
+        <div class="welcome-card">
+            <h2>Hi Divya <span>💜</span></h2>
+            <p>Something special is waiting behind this screen... A quiet little space built just for you, filled with memories and notes. Tap whenever you're ready, Madam 🫠✨</p>
+            <button class="btn">Enter Your World ✨</button>
+        </div>
+    </div>
+
+    <!-- Floating Lavender & Burgundy Petals -->
+    <div id="petals-container"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="badge">✦ Advance Birthday Wish ✦</div>
+            <h1>Counting Down to <span>December 29</span></h1>
+            <p class="subtitle">A special corner of the web created just for you.</p>
+        </header>
+
+        <!-- Live Countdown Timer -->
+        <div class="glass-card">
+            <h2 style="font-family: 'Playfair Display', serif; text-align: center; color: var(--lavender-light); margin-bottom: 10px;">The Moment Approaches</h2>
+            <div class="countdown-grid">
+                <div class="time-box">
+                    <span id="days">00</span>
+                    <label>Days</label>
+                </div>
+                <div class="time-box">
+                    <span id="hours">00</span>
+                    <label>Hours</label>
+                </div>
+                <div class="time-box">
+                    <span id="minutes">00</span>
+                    <label>Minutes</label>
+                </div>
+                <div class="time-box">
+                    <span id="seconds">00</span>
+                    <label>Seconds</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 1: The Jar of Notes -->
+        <div class="glass-card jar-section">
+            <h2>The Jar of Little Reasons</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Click to draw a random note from our collection.</p>
+            <div class="note-display" id="noteDisplay">
+                "Click the button below whenever you need a reminder of how amazing you are."
+            </div>
+            <button class="btn" onclick="drawNewNote()">Draw a Note ✦</button>
+        </div>
+
+        <!-- Module 2: Chapter Map / Timeline -->
+        <div class="glass-card timeline-section">
+            <h2>Our Chapter Map</h2>
+            <div class="chapters">
+                <div class="chapter-card" onclick="toggleChapter(this)">
+                    <div class="chapter-header">
+                        <span class="chapter-title">Chapter I: The Spark</span>
+                        <span class="chapter-tag">Tap to read</span>
+                    </div>
+                    <div class="chapter-body">
+                        Every great story has a beginning. Looking back at how much laughter, support, and wonderful moments we've shared makes every single day brighter.
+                    </div>
+                </div>
+                <div class="chapter-card" onclick="toggleChapter(this)">
+                    <div class="chapter-header">
+                        <span class="chapter-title">Chapter II: Shared Ambitions & Quiet Nights</span>
+                        <span class="chapter-tag">Tap to read</span>
+                    </div>
+                    <div class="chapter-body">
+                        From late-night planning sessions to quiet moments of understanding, building things together and sharing life side by side is an incredible journey.
+                    </div>
+                </div>
+                <div class="chapter-card" onclick="toggleChapter(this)">
+                    <div class="chapter-header">
+                        <span class="chapter-title">Chapter III: December 29 & Beyond</span>
+                        <span class="chapter-tag">Tap to read</span>
+                    </div>
+                    <div class="chapter-body">
+                        As your birthday arrives at the close of the year, here's to celebrating all your accomplishments and looking forward to an extraordinary year ahead.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 3: Unlockable Midnight Vault -->
+        <div class="glass-card vault-section">
+            <h2>The Midnight Vault</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Sealed until December 29th</p>
+            <button class="btn" id="vaultBtn" onclick="unlockVault()" style="margin-top: 15px;">Unlock Your Letter 🗝️</button>
+            <div class="vault-content" id="vaultContent">
+                <p>
+                    "Advance Happy Birthday Madammmmm 🫠💝🫶! May this upcoming year bring you endless success in everything you build, profound happiness, and wonderful adventures. Thank you for being such an inspiring, brilliant, and wonderful presence."
+                </p>
+                <span style="font-family: 'Playfair Display', serif; color: var(--lavender); font-size: 1.1rem;">— With all my admiration & warmth</span>
+            </div>
+        </div>
+
+        <!-- Module 4: Grand Surprise Teaser -->
+        <div class="glass-card teaser-section">
+            <h2>The December 29th Waiting Room</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Something bigger is quietly wrapping itself up...</p>
+            <button class="btn" id="teaserBtn" onclick="revealTeaser()" style="margin-top: 15px;">Tap for a Hint... 🎁</button>
+            <div class="teaser-reveal" id="teaserReveal">
+                "Hold tight and keep watching the clock... When midnight strikes on December 29th, this page unlocks its final, most magical surprise. Until then, keep smiling! ✨"
+            </div>
+        </div>
+    </div>
+
+    <!-- Ambient Audio Toggle Float -->
+    <div class="audio-float" onclick="toggleAudio()" title="Toggle Ambient Chimes">
+        🎵
+    </div>
+
+    <script>
+        // Enter World Action from Welcome Gate
+        function enterWorld() {
+            const overlay = document.getElementById('welcome-overlay');
+            overlay.classList.add('fade-out');
+            playChime(); // Play gentle audio cue on entry
+        }
+
+        // Floating Petals Generator
+        const petalsContainer = document.getElementById('petals-container');
+        const petalCount = 18;
+        for (let i = 0; i < petalCount; i++) {
+            const petal = document.createElement('div');
+            petal.classList.add('petal');
+            const size = Math.random() * 10 + 10;
+            petal.style.width = `${size}px`;
+            petal.style.height = `${size * 1.4}px`;
+            petal.style.left = `${Math.random() * 100}vw`;
+            petal.style.top = `-20px`;
+            petal.style.animationDuration = `${Math.random() * 8 + 6}s`;
+            petal.style.animationDelay = `${Math.random() * 5}s`;
+            petalsContainer.appendChild(petal);
+        }
+
+        // Countdown Timer to Dec 29
+        function updateCountdown() {
+            const now = new Date();
+            let year = now.getFullYear();
+            let targetDate = new Date(year, 11, 29, 0, 0, 0); // Dec 29
+            
+            if (now > targetDate) {
+                targetDate = new Date(year + 1, 11, 29, 0, 0, 0);
+            }
+
+            const diff = targetDate - now;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = String(days).padStart(2, '0');
+            document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+            document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Jar of Notes Data
+        const notes = [
+            "Your determination and drive in everything you do is genuinely inspiring.",
+            "I love how your creativity turns any idea into something extraordinary.",
+            "You have a unique way of making hard work look effortless and graceful.",
+            "Here's to all the late-night talks, big dreams, and shared milestones.",
+            "Your kindness and warmth leave a lasting impression on everyone around you.",
+            "May this next year bring you closer to every single goal you've set."
+        ];
+
+        function drawNewNote() {
+            const display = document.getElementById('noteDisplay');
+            display.style.opacity = 0;
+            setTimeout(() => {
+                const randomNote = notes[Math.floor(Math.random() * notes.length)];
+                display.innerText = `"${randomNote}"`;
+                display.style.opacity = 1;
+            }, 250);
+        }
+
+        // Timeline Chapter Accordion
+        function toggleChapter(card) {
+            const isActive = card.classList.contains('active');
+            document.querySelectorAll('.chapter-card').forEach(c => c.classList.remove('active'));
+            if (!isActive) {
+                card.classList.add('active');
+            }
+        }
+
+        // Unlock Vault
+        function unlockVault() {
+            document.getElementById('vaultBtn').style.display = 'none';
+            document.getElementById('vaultContent').style.display = 'block';
+        }
+
+        // Reveal Teaser
+        function revealTeaser() {
+            document.getElementById('teaserBtn').style.display = 'none';
+            document.getElementById('teaserReveal').style.display = 'block';
+        }
+
+        // Web Audio Chimes
+        let audioCtx = null;
+        function playChime() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5 note
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 1.5);
+        }
+
+        function toggleAudio() {
+            playChime();
+        }
+    </script>
+</body>
+</html>
